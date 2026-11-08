@@ -200,10 +200,15 @@ export function setPassPhase(phase: PassPhase): void {
 export function nextPassPlayer(): void {
   const next = state.passIndex + 1;
   if (next >= state.assignments.length) {
-    setState({ screen: 'overview', passIndex: 0, passPhase: 'cover' });
+    // Keep roles hidden — last player must not see the storyteller list.
+    setState({ passPhase: 'done', passIndex: 0 });
     return;
   }
   setState({ passIndex: next, passPhase: 'cover' });
+}
+
+export function finishPassToStoryteller(): void {
+  setState({ screen: 'overview', passIndex: 0, passPhase: 'cover' });
 }
 
 export function getAssignment(playerId: string): Assignment | undefined {

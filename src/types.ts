@@ -34,7 +34,7 @@ export type Assignment = {
 
 export type Screen = 'players' | 'roles' | 'overview' | 'share' | 'pass';
 
-export type PassPhase = 'cover' | 'reveal';
+export type PassPhase = 'cover' | 'reveal' | 'done';
 
 export type AppState = {
   screen: Screen;
