@@ -102,7 +102,7 @@ export function renderRoles(state: AppState): HTMLElement {
   for (const custom of state.roles.custom) {
     const item = el('div', { className: 'custom-item' });
     item.append(
-      el('div', { className: 'row' },
+      el('div', { className: 'row player-row' },
         el('div', { className: 'field' },
           el('label', { text: 'Role name' }),
           el('input', {
@@ -112,6 +112,13 @@ export function renderRoles(state: AppState): HTMLElement {
             'data-focus': `custom-name-${custom.id}`,
             onInput: (e: Event) => {
               updateCustomRole(custom.id, { name: (e.target as HTMLInputElement).value });
+            },
+            onChange: (e: Event) => {
+              updateCustomRole(
+                custom.id,
+                { name: (e.target as HTMLInputElement).value },
+                { render: true },
+              );
             },
           }),
         ),
@@ -132,10 +139,12 @@ export function renderRoles(state: AppState): HTMLElement {
             max: String(Math.max(1, state.players.length - 1)),
             value: String(custom.count),
             'data-focus': `custom-count-${custom.id}`,
-            onInput: (e: Event) => {
-              updateCustomRole(custom.id, {
-                count: Number((e.target as HTMLInputElement).value) || 0,
-              });
+            onChange: (e: Event) => {
+              updateCustomRole(
+                custom.id,
+                { count: Number((e.target as HTMLInputElement).value) || 0 },
+                { render: true },
+              );
             },
           }),
         ),
@@ -144,9 +153,11 @@ export function renderRoles(state: AppState): HTMLElement {
           el('select', {
             value: custom.team,
             onChange: (e: Event) => {
-              updateCustomRole(custom.id, {
-                team: (e.target as HTMLSelectElement).value as Team,
-              });
+              updateCustomRole(
+                custom.id,
+                { team: (e.target as HTMLSelectElement).value as Team },
+                { render: true },
+              );
             },
           },
             el('option', { value: 'town', text: 'Town' }),

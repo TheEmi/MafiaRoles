@@ -15,7 +15,6 @@ export function dealRoles(players: Player[], pool: RoleSlot[]): Assignment[] {
   return order.map((player, index) => ({
     playerId: player.id,
     playerName: player.name.trim(),
-    phone: player.phone.trim(),
     roleName: roles[index].name,
     team: roles[index].team,
   }));

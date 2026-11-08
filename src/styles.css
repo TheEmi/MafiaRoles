@@ -69,6 +69,10 @@ body::before {
   animation: rise 320ms ease-out;
 }
 
+.screen.no-anim {
+  animation: none;
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -254,7 +258,10 @@ input::placeholder {
   box-shadow: var(--shadow);
 }
 
-.player-item .row,
+.player-item .row.player-row {
+  align-items: end;
+}
+
 .custom-item .row {
   align-items: stretch;
 }
@@ -264,8 +271,17 @@ input::placeholder {
   background: transparent;
   color: var(--ink-muted);
   border-radius: 12px;
-  min-width: 2.75rem;
+  /* Match text input: 0.85rem padding × 2 + line-box + 1px borders */
+  width: 3.05rem;
+  height: 3.05rem;
+  flex: 0 0 3.05rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  line-height: 1;
+  align-self: end;
 }
 
 .icon-btn:hover {

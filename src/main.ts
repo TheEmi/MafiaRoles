@@ -1,6 +1,6 @@
 import './styles.css';
 import { getState, subscribe } from './state';
-import type { AppState } from './types';
+import type { AppState, Screen } from './types';
 import { clear } from './ui/helpers';
 import { renderOverview } from './ui/overview';
 import { renderPass } from './ui/pass';
@@ -11,6 +11,8 @@ import { renderShare } from './ui/share';
 const root = document.querySelector<HTMLDivElement>('#app');
 if (!root) throw new Error('#app missing');
 const app: HTMLDivElement = root;
+
+let lastScreen: Screen | null = null;
 
 function renderScreen(state: AppState): HTMLElement {
   switch (state.screen) {
@@ -30,6 +32,10 @@ function renderScreen(state: AppState): HTMLElement {
 }
 
 function render(): void {
+  const state = getState();
+  const screenChanged = lastScreen !== state.screen;
+  lastScreen = state.screen;
+
   const active = document.activeElement as HTMLElement | null;
   const focusKey = active?.getAttribute('data-focus');
   const selection =
@@ -38,7 +44,9 @@ function render(): void {
       : null;
 
   clear(app);
-  app.append(renderScreen(getState()));
+  const view = renderScreen(state);
+  if (!screenChanged) view.classList.add('no-anim');
+  app.append(view);
 
   if (focusKey) {
     const next = app.querySelector<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(

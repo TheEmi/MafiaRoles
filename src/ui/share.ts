@@ -13,7 +13,7 @@ async function shareNative(assignment: Assignment): Promise<void> {
   const text = roleMessage(assignment);
   const result = await nativeShare(text);
   if (result === 'unavailable') {
-    openExternal(whatsappUrl(assignment.phone, text));
+    openExternal(whatsappUrl(text));
   }
 }
 
@@ -26,7 +26,7 @@ export function renderShare(state: AppState): HTMLElement {
       el('div', { className: 'step-label', text: 'Deliver' }),
       el('h1', { text: 'Share' }),
       el('p', {
-        text: 'Opens WhatsApp, Messages, or your share sheet with the role text ready. Nothing is sent from this app.',
+        text: 'Opens WhatsApp, Messages, or your share sheet with the role text ready. Pick the contact there — nothing is sent from this app.',
       }),
     ),
   );
@@ -35,39 +35,40 @@ export function renderShare(state: AppState): HTMLElement {
 
   for (const a of state.assignments) {
     const text = roleMessage(a);
-    const item = el('div', { className: 'share-item' },
-      el('div', { className: 'row spread' },
-        el('strong', { text: a.playerName }),
-        el('span', { className: `team-tag ${a.team}`, text: a.roleName }),
-      ),
-      el('div', { className: 'share-actions' },
-        canNative
-          ? el('button', {
-              className: 'btn small',
-              type: 'button',
-              text: 'Share…',
-              onClick: () => {
-                void shareNative(a);
-              },
-            })
-          : null,
-        el('button', {
-          className: 'btn secondary small',
-          type: 'button',
-          text: 'WhatsApp',
-          onClick: () => openExternal(whatsappUrl(a.phone, text)),
-        }),
-        el('button', {
-          className: 'btn secondary small',
-          type: 'button',
-          text: 'SMS',
-          onClick: () => {
-            window.location.href = smsUrl(a.phone, text);
-          },
-        }),
+    list.append(
+      el('div', { className: 'share-item' },
+        el('div', { className: 'row spread' },
+          el('strong', { text: a.playerName }),
+          el('span', { className: `team-tag ${a.team}`, text: a.roleName }),
+        ),
+        el('div', { className: 'share-actions' },
+          canNative
+            ? el('button', {
+                className: 'btn small',
+                type: 'button',
+                text: 'Share…',
+                onClick: () => {
+                  void shareNative(a);
+                },
+              })
+            : null,
+          el('button', {
+            className: 'btn secondary small',
+            type: 'button',
+            text: 'WhatsApp',
+            onClick: () => openExternal(whatsappUrl(text)),
+          }),
+          el('button', {
+            className: 'btn secondary small',
+            type: 'button',
+            text: 'SMS',
+            onClick: () => {
+              window.location.href = smsUrl(text);
+            },
+          }),
+        ),
       ),
     );
-    list.append(item);
   }
 
   screen.append(

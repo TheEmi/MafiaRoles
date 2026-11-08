@@ -26,7 +26,6 @@ function loadPlayers(): Player[] {
       .map((p) => ({
         id: typeof p.id === 'string' ? p.id : crypto.randomUUID(),
         name: p.name,
-        phone: typeof p.phone === 'string' ? p.phone : '',
       }));
   } catch {
     return [];
@@ -74,10 +73,10 @@ export function go(screen: Screen): void {
   setState({ screen });
 }
 
-export function addPlayer(name = '', phone = ''): void {
+export function addPlayer(name = ''): void {
   const players = [
     ...state.players,
-    { id: crypto.randomUUID(), name, phone },
+    { id: crypto.randomUUID(), name },
   ];
   savePlayers(players);
   setState({
@@ -89,10 +88,13 @@ export function addPlayer(name = '', phone = ''): void {
   });
 }
 
-export function updatePlayer(id: string, patch: Partial<Pick<Player, 'name' | 'phone'>>): void {
-  const players = state.players.map((p) => (p.id === id ? { ...p, ...patch } : p));
-  savePlayers(players);
-  setState({ players });
+/** Updates name without re-rendering the whole UI. */
+export function updatePlayer(id: string, patch: Partial<Pick<Player, 'name'>>): void {
+  state = {
+    ...state,
+    players: state.players.map((p) => (p.id === id ? { ...p, ...patch } : p)),
+  };
+  savePlayers(state.players);
 }
 
 export function removePlayer(id: string): void {
@@ -145,13 +147,16 @@ export function addCustomRole(role: CustomRole): void {
   });
 }
 
-export function updateCustomRole(id: string, patch: Partial<CustomRole>): void {
-  setState({
+/** Field edits without a full re-render. Team changes should call emit via setToggle-style paths. */
+export function updateCustomRole(id: string, patch: Partial<CustomRole>, opts?: { render?: boolean }): void {
+  state = {
+    ...state,
     roles: {
       ...state.roles,
       custom: state.roles.custom.map((c) => (c.id === id ? { ...c, ...patch } : c)),
     },
-  });
+  };
+  if (opts?.render) emit();
 }
 
 export function removeCustomRole(id: string): void {

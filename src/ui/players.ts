@@ -16,7 +16,7 @@ export function renderPlayers(state: AppState): HTMLElement {
       el('div', { className: 'step-label', text: 'Step 1' }),
       el('h1', { text: 'Mafia Deal' }),
       el('p', {
-        text: 'Add everyone at the table. Phone numbers are optional — used only to open WhatsApp or SMS with the role prefilled.',
+        text: 'Add everyone at the table. After dealing, share roles via WhatsApp/SMS or pass the phone.',
       }),
     ),
   );
@@ -28,51 +28,32 @@ export function renderPlayers(state: AppState): HTMLElement {
   }
 
   for (const player of state.players) {
-    const item = el('div', { className: 'player-item' });
-
-    const nameField = el('div', { className: 'field' },
-      el('label', { text: 'Name' }),
-      el('input', {
-        type: 'text',
-        value: player.name,
-        placeholder: 'Player name',
-        autocomplete: 'name',
-        'data-focus': `name-${player.id}`,
-        onInput: (e: Event) => {
-          updatePlayer(player.id, { name: (e.target as HTMLInputElement).value });
-        },
-      }),
-    );
-
-    const phoneField = el('div', { className: 'field' },
-      el('label', { text: 'Phone (optional)' }),
-      el('input', {
-        type: 'tel',
-        value: player.phone,
-        placeholder: '+1 555…',
-        autocomplete: 'tel',
-        'data-focus': `phone-${player.id}`,
-        onInput: (e: Event) => {
-          updatePlayer(player.id, { phone: (e.target as HTMLInputElement).value });
-        },
-      }),
-    );
-
-    item.append(
-      el('div', { className: 'row' },
-        nameField,
-        el('button', {
-          className: 'icon-btn',
-          type: 'button',
-          title: 'Remove player',
-          text: '✕',
-          onClick: () => removePlayer(player.id),
-        }),
+    list.append(
+      el('div', { className: 'player-item' },
+        el('div', { className: 'row player-row' },
+          el('div', { className: 'field' },
+            el('label', { text: 'Name' }),
+            el('input', {
+              type: 'text',
+              value: player.name,
+              placeholder: 'Player name',
+              autocomplete: 'name',
+              'data-focus': `name-${player.id}`,
+              onInput: (e: Event) => {
+                updatePlayer(player.id, { name: (e.target as HTMLInputElement).value });
+              },
+            }),
+          ),
+          el('button', {
+            className: 'icon-btn',
+            type: 'button',
+            title: 'Remove player',
+            text: '✕',
+            onClick: () => removePlayer(player.id),
+          }),
+        ),
       ),
-      phoneField,
     );
-
-    list.append(item);
   }
 
   screen.append(list);

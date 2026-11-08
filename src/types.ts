@@ -3,7 +3,6 @@ export type Team = 'mafia' | 'town' | 'neutral';
 export type Player = {
   id: string;
   name: string;
-  phone: string;
 };
 
 export type ToggleKey = 'detective' | 'doctor' | 'jester';
@@ -29,7 +28,6 @@ export type RoleSlot = {
 export type Assignment = {
   playerId: string;
   playerName: string;
-  phone: string;
   roleName: string;
   team: Team;
 };
